@@ -1,8 +1,8 @@
 import fs from "fs";
 import { ProtobufReader } from "./ProtobufReader";
-import { proto } from "./protos/LangConfig";
+import { proto } from "./protos/AssetsPatchConfig";
 
-const file = fs.readFileSync("./cms/LangConfig.bytes");
+const file = fs.readFileSync("./cms/AssetsPatchConfig.bytes");
 
 const reader = new ProtobufReader(file);
 

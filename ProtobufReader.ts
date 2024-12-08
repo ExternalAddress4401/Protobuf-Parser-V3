@@ -34,6 +34,10 @@ export class ProtobufReader extends BufferHandler {
     const parsed: Record<string, any> = {};
     for (const key in proto) {
       const values: any[] = [];
+      let reader: ProtobufReader;
+      if (!this.groupings[key]) {
+        continue;
+      }
       switch (proto[key].type) {
         case "varint":
           parsed[proto[key].name] = this.groupings[key][0].readVarint();
@@ -44,14 +48,16 @@ export class ProtobufReader extends BufferHandler {
             .toString();
           break;
         case "string-repeat":
-          const reader = this.groupings[key][0];
+          reader = this.groupings[key][0];
           while (reader.hasMore()) {
             values.push(reader.readStringBuffer().toString());
           }
           parsed[proto[key].name] = values;
           break;
+        case "boolean":
+          parsed[proto[key].name] = this.groupings[key][0].readVarint() === 0;
+          break;
         case "group":
-        case "packed":
           this.preprocess();
           if (!this.groupings[key]) {
             break;
@@ -62,6 +68,15 @@ export class ProtobufReader extends BufferHandler {
           }
 
           parsed[proto[key].name] = values;
+          break;
+        case "packed":
+          reader = this.groupings[key][0];
+          while (reader.hasMore()) {
+            const subReader = new ProtobufReader(reader.readStringBuffer());
+            values.push(subReader.parse(proto[key].fields));
+          }
+          parsed[proto[key].name] = values;
+
           break;
       }
     }
