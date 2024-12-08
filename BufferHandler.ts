@@ -38,11 +38,21 @@ export class BufferHandler {
   readByte() {
     return this.#buffer.readUInt8(this.#index++);
   }
+  readBytes(count: number) {
+    const bytes = this.#buffer.subarray(this.#index, this.#index + count);
+    this.#index += count;
+    return bytes;
+  }
   readStringBuffer() {
     const length = this.readVarint();
     const str = this.#buffer.subarray(this.#index, this.#index + length);
     this.#index += length;
     return str;
+  }
+  readFloat() {
+    const f = this.#buffer.readFloatLE(this.#index);
+    this.#index += 4;
+    return f;
   }
   hasMore() {
     return this.#index < this.#buffer.length;

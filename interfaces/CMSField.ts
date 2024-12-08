@@ -3,7 +3,7 @@ interface BaseCMSField {
 }
 
 interface PlainCMSField extends BaseCMSField {
-  type: "varint" | "boolean" | "string" | "string-repeat";
+  type: "varint" | "boolean" | "string" | "string-repeat" | "float";
 }
 
 export interface CMSFieldGroupOrPacked extends BaseCMSField {
@@ -11,4 +11,9 @@ export interface CMSFieldGroupOrPacked extends BaseCMSField {
   fields: Record<number, CMSField>;
 }
 
-export type CMSField = PlainCMSField | CMSFieldGroupOrPacked;
+export interface ChunkedCMSField extends BaseCMSField {
+  type: "chunk";
+  chunk: string;
+}
+
+export type CMSField = PlainCMSField | CMSFieldGroupOrPacked | ChunkedCMSField;

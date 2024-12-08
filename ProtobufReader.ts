@@ -1,5 +1,6 @@
 import { BufferHandler } from "./BufferHandler";
-import { CMSField, CMSFieldGroupOrPacked } from "./interfaces/CMSField";
+import { CMSField } from "./interfaces/CMSField";
+import fs from "fs";
 
 export class ProtobufReader extends BufferHandler {
   groupings: Record<number, ProtobufReader[]> = {};
@@ -27,17 +28,23 @@ export class ProtobufReader extends BufferHandler {
             new ProtobufReader(this.readStringBuffer(), false)
           );
           break;
+        case 5:
+          this.groupings[key.field].push(
+            new ProtobufReader(this.readBytes(4), false)
+          );
       }
     }
   }
   parse(proto: Record<number, CMSField>) {
     const parsed: Record<string, any> = {};
-    for (const key in proto) {
-      const values: any[] = [];
-      let reader: ProtobufReader;
-      if (!this.groupings[key]) {
+    for (const key in this.groupings) {
+      const field = proto[key];
+      if (!field) {
+        parsed[key] = this.groupings[key][0].getBuffer();
         continue;
       }
+      const values: any[] = [];
+      let reader: ProtobufReader;
       switch (proto[key].type) {
         case "varint":
           parsed[proto[key].name] = this.groupings[key][0].readVarint();
@@ -46,6 +53,9 @@ export class ProtobufReader extends BufferHandler {
           parsed[proto[key].name] = this.groupings[key][0]
             .getBuffer()
             .toString();
+          break;
+        case "float":
+          parsed[proto[key].name] = this.groupings[key][0].readFloat();
           break;
         case "string-repeat":
           reader = this.groupings[key][0];
@@ -78,38 +88,17 @@ export class ProtobufReader extends BufferHandler {
           parsed[proto[key].name] = values;
 
           break;
+        case "chunk":
+          const chunk = JSON.parse(
+            fs
+              .readFileSync(`./protos/chunks/${proto[key].chunk}.json`)
+              .toString()
+          );
+          console.log(chunk.fields);
+          this.groupings[key][0].preprocess();
+          parsed[proto[key].name] = this.groupings[key][0].parse(chunk.fields);
       }
     }
     return parsed;
   }
-  /*parseField(reader: ProtobufReader, proto: CMSField) {
-    switch (proto.type) {
-      case "varint":
-        return reader.readVarint();
-      case "string":
-        return reader.getBuffer().toString();
-      case "string-repeat":
-        const values = [];
-        while (reader.hasMore()) {
-          values.push(reader.readStringBuffer().toString());
-        }
-        return values;
-    }
-  }*/
-  /*parseGroup(field: ProtobufReader[], proto: Record<number, CMSField>) {
-    const parsed: any[] = [];
-
-    for (const reader of field) {
-      reader.preprocess();
-      const record: Record<string, any> = {};
-
-      for (const key in proto) {
-        const entry = proto[key];
-        record[entry.name] = this.parseField(reader, proto[key]);
-      }
-
-      parsed.push(record);
-    }
-    return parsed;
-  }*/
 }
