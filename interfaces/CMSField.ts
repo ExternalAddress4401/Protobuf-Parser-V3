@@ -16,4 +16,13 @@ export interface ChunkedCMSField extends BaseCMSField {
   chunk: string;
 }
 
-export type CMSField = PlainCMSField | CMSFieldGroupOrPacked | ChunkedCMSField;
+export interface EnumCMSField extends BaseCMSField {
+  type: "enum";
+  enums: Record<number, string>;
+}
+
+export type CMSField =
+  | PlainCMSField
+  | CMSFieldGroupOrPacked
+  | ChunkedCMSField
+  | EnumCMSField;
