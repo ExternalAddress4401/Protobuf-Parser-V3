@@ -1,41 +1,69 @@
 import { BufferHandler } from "./BufferHandler";
 import { CMSField } from "./interfaces/CMSField";
-import fs from "fs";
 
-export class ProtobufReader extends BufferHandler {
-  groupings: Record<number, ProtobufReader[]> = {};
+export class ProtobufWriter extends BufferHandler {
+  constructor() {
+    super(Buffer.alloc(1000000), "WRITE");
+  }
+  build(
+    data: Record<string, any>,
+    proto: Record<number, CMSField>,
+    sub: boolean = false
+  ) {
+    const ent = Object.entries(proto);
+    let temp: ProtobufWriter;
+    for (const key in data) {
+      const row: any = ent.find((el) => el[1].name === key);
+      if (!row) {
+        console.log("thing", data, ent, key);
+        throw new Error("Invalid whatever found.");
+      }
+      const [protoKey, prot] = row;
+      switch (prot.type) {
+        case "varint":
+          this.writeKey(0, parseInt(protoKey));
+          this.writeVarint(data[key]);
+          break;
+        case "string":
+          this.writeString(data[key], parseInt(protoKey));
+          break;
+        case "group":
+          temp = new ProtobufWriter();
+          console.log("DATA", data, key);
+          for (const entry of data[key]) {
+            const b = new ProtobufWriter();
+            const buf = b.build(entry, prot.fields, true);
+            temp.writeKey(2, parseInt(protoKey));
+            temp.writeVarint(buf.length);
+            temp.writeBuffer(buf);
+          }
+          this.writeBuffer(temp.getBuffer());
+          break;
+        case "packed":
+          this.writeKey(2, parseInt(protoKey));
+          temp = new ProtobufWriter();
+          for (const entry of data[key]) {
+            const b = new ProtobufWriter();
+            const buf = b.build(entry, prot.fields);
+            temp.writeVarint(buf.length);
+            temp.writeBuffer(buf);
+          }
+          this.writeVarint(temp.index);
+          this.writeBuffer(temp.getBuffer());
+          break;
+        case "boolean":
+          this.writeKey(0, parseInt(protoKey));
+          this.writeVarint(data[key] ? 0 : 1);
+          break;
+        default:
+          console.log("wtf is this shit?", row);
+          break;
+      }
+    }
+    return this.getBuffer();
+  }
 
-  constructor(buffer: Buffer, shouldProcess: boolean = true) {
-    super(buffer, "READ");
-    if (shouldProcess) {
-      this.preprocess();
-    }
-  }
-  preprocess() {
-    while (this.hasMore()) {
-      const key = this.readKey();
-      if (!this.groupings[key.field]) {
-        this.groupings[key.field] = [];
-      }
-      switch (key.wire) {
-        case 0:
-          this.groupings[key.field].push(
-            new ProtobufReader(this.readVarintBuffer(), false)
-          );
-          break;
-        case 2:
-          this.groupings[key.field].push(
-            new ProtobufReader(this.readStringBuffer(), false)
-          );
-          break;
-        case 5:
-          this.groupings[key.field].push(
-            new ProtobufReader(this.readBytes(4), false)
-          );
-      }
-    }
-  }
-  parse(proto: Record<number, CMSField>) {
+  /*parse(proto: Record<number, CMSField>) {
     const parsed: Record<string, any> = {};
     for (const key in this.groupings) {
       const field = proto[key];
@@ -85,7 +113,6 @@ export class ProtobufReader extends BufferHandler {
             const subReader = new ProtobufReader(reader.readStringBuffer());
             values.push(subReader.parse(proto[key].fields));
           }
-
           parsed[proto[key].name] = values;
 
           break;
@@ -112,5 +139,5 @@ export class ProtobufReader extends BufferHandler {
       }
     }
     return parsed;
-  }
+  }*/
 }

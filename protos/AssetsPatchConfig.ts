@@ -74,7 +74,7 @@ export const proto: Record<number, CMSField> = {
     type: "string",
   },
   7: {
-    name: "version",
+    name: "downloadBucketVetsion",
     type: "string",
   },
 };
