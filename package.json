@@ -23,5 +23,8 @@
   },
   "author": "externaladdress4401",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "publishConfig": {
+    "@externaladdress4401:registry": "https://npm.pkg.github.com"
+  }
 }
