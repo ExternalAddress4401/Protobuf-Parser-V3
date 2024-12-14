@@ -15,7 +15,6 @@ export class ProtobufWriter extends BufferHandler {
     for (const key in data) {
       const row: any = ent.find((el) => el[1].name === key);
       if (!row) {
-        console.log("thing", data, ent, key);
         throw new Error("Invalid whatever found.");
       }
       const [protoKey, prot] = row;
@@ -29,7 +28,6 @@ export class ProtobufWriter extends BufferHandler {
           break;
         case "group":
           temp = new ProtobufWriter();
-          console.log("DATA", data, key);
           for (const entry of data[key]) {
             const b = new ProtobufWriter();
             const buf = b.build(entry, prot.fields, true);
@@ -56,7 +54,6 @@ export class ProtobufWriter extends BufferHandler {
           this.writeVarint(data[key] ? 0 : 1);
           break;
         default:
-          console.log("wtf is this shit?", row);
           break;
       }
     }

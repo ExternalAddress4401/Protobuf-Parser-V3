@@ -34,7 +34,6 @@ export async function getCms() {
     CMSRequestProto
   );
   const json = response.toJson(ResponseHeaderProto, CMSRequestResponseProto);
-  console.log("here", json.body.cms[0].cms[0]);
 
   return json.body.cms[0].cms[0];
 }

@@ -31,8 +31,4 @@ export const cms = [
     url: "SongConfig",
     language: "en",
   },
-  {
-    url: "PaymentConfig",
-    language: "en",
-  },
 ];

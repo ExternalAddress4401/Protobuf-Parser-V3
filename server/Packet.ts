@@ -7,11 +7,9 @@ export default class Packet {
   body: Buffer = Buffer.alloc(0);
 
   setHeader(data: any, proto: any) {
-    console.log(data, proto);
     this.header = new ProtobufWriter().build(data, proto);
   }
   setBody(data: any, proto: any) {
-    console.log(data);
     this.body = new ProtobufWriter().build(data, proto);
   }
   build() {
