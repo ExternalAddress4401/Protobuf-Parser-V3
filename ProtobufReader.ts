@@ -2,6 +2,10 @@ import path from "path";
 import { BufferHandler } from "./BufferHandler";
 import { CMSField } from "./interfaces/CMSField";
 import fs from "fs";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export class ProtobufReader extends BufferHandler {
   groupings: Record<number, ProtobufReader[]> = {};
