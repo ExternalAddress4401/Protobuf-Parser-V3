@@ -1,3 +1,4 @@
+import path from "path";
 import { BufferHandler } from "./BufferHandler";
 import { CMSField } from "./interfaces/CMSField";
 import fs from "fs";
@@ -98,7 +99,13 @@ export class ProtobufReader extends BufferHandler {
         case "chunk":
           const chunk = JSON.parse(
             fs
-              .readFileSync(`./protos/chunks/${proto[key].chunk}.json`)
+              .readFileSync(
+                path.join(
+                  __dirname,
+                  "protos/chunks",
+                  `${proto[key].chunk}.json`
+                )
+              )
               .toString()
           );
           this.groupings[key][0].preprocess();
@@ -108,7 +115,11 @@ export class ProtobufReader extends BufferHandler {
           const e = JSON.parse(
             fs
               .readFileSync(
-                `./protos/enums/${proto[key].enums[parsed.type]}.json`
+                path.join(
+                  __dirname,
+                  "protos/enums",
+                  `${proto[key].enums[parsed.type]}.json`
+                )
               )
               .toString()
           );
