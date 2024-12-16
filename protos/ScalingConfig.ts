@@ -56,4 +56,26 @@ export const proto: Record<number, CMSField> = {
       },
     },
   },
+  4: {
+    name: "devices",
+    type: "packed",
+    fields: {
+      1: {
+        name: "id",
+        type: "varint",
+      },
+      2: {
+        name: "idLabel",
+        type: "string",
+      },
+      3: {
+        name: "platform",
+        type: "varint",
+      },
+      4: {
+        name: "level_id",
+        type: "string",
+      },
+    },
+  },
 };

@@ -49,6 +49,12 @@ export class ProtobufReader extends BufferHandler {
         case "varint":
           parsed[proto[key].name] = this.groupings[key][0].readVarint();
           break;
+        case "signed-varint":
+          const v = this.groupings[key][0].readVarint();
+          const big = BigInt(v);
+          const zigzag = (big >> 1n) ^ -(big & 1n);
+          parsed[proto[key].name] = Number(zigzag);
+          break;
         case "string":
           parsed[proto[key].name] = this.groupings[key][0]
             .getBuffer()

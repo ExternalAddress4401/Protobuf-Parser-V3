@@ -73,6 +73,10 @@ export const proto: Record<number, CMSField> = {
         name: "Difficulty_id",
         type: "varint",
       },
+      8: {
+        name: "Version",
+        type: "varint",
+      },
       9: {
         name: "isComplete",
         type: "varint",
@@ -89,9 +93,18 @@ export const proto: Record<number, CMSField> = {
         name: "InteractionsAsset_id",
         type: "string",
       },
+      14: {
+        name: "botScoreCurve",
+        type: "group",
+        fields: {},
+      },
       15: {
         name: "Description",
         type: "string",
+      },
+      16: {
+        name: "BeatmapType",
+        type: "varint",
       },
     },
   },
@@ -189,6 +202,10 @@ export const proto: Record<number, CMSField> = {
             name: "vfxColor",
             type: "string",
           },
+          10: {
+            name: "whizzbangColor",
+            type: "signed-varint",
+          },
         },
       },
       62: {
@@ -245,7 +262,7 @@ export const proto: Record<number, CMSField> = {
       },
       80: {
         name: "Groups_id",
-        type: "varint",
+        type: "varint", //repeating
       },
       83: {
         name: "removalReason",
@@ -262,6 +279,10 @@ export const proto: Record<number, CMSField> = {
       86: {
         name: "audioAsset_id",
         type: "string",
+      },
+      90: {
+        name: "TrackGlow",
+        type: "varint",
       },
     },
   },
@@ -372,6 +393,36 @@ export const proto: Record<number, CMSField> = {
       3: {
         name: "albumArtSuitableForLoadingScreen",
         type: "boolean",
+      },
+    },
+  },
+  15: {
+    name: "SongSelectionWeightings",
+    type: "packed",
+    fields: {
+      1: {
+        name: "id",
+        type: "varint",
+      },
+      2: {
+        name: "idLabel",
+        type: "string",
+      },
+      3: {
+        name: "totaliser",
+        type: "varint",
+      },
+      4: {
+        name: "shuffle",
+        type: "varint",
+      },
+      5: {
+        name: "easyQueue",
+        type: "varint",
+      },
+      6: {
+        name: "box",
+        type: "varint",
       },
     },
   },

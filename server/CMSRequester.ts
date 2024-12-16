@@ -4,7 +4,14 @@ import { proto as CMSRequestProto } from "./protos/CMSRequest";
 import { proto as CMSRequestResponseProto } from "./protos/CMSRequestResponse";
 import { proto as ResponseHeaderProto } from "./protos/ResponseHeader";
 
-export async function getCms() {
+interface CMSVersion {
+  name: string;
+  version: string;
+  hash: string;
+  url: string;
+}
+
+export async function getCms(): Promise<CMSVersion[]> {
   const server = new PacketServer("socket-gateway.prod.flamingo.apelabs.net");
   await server.authenticate();
 
@@ -35,7 +42,7 @@ export async function getCms() {
   );
   const json = response.toJson(ResponseHeaderProto, CMSRequestResponseProto);
 
-  return json.body.cms[0].cms[0];
+  return json.body.cms[0].cms[0].cms;
 }
 
 /*export async function getExtraCms() {
