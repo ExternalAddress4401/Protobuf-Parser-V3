@@ -1,3 +1,13 @@
+export type CMSTitles =
+  | "GameConfig"
+  | "LangConfig"
+  | "AssetsPatchConfig"
+  | "AudioConfig"
+  | "ScalingConfig"
+  | "NotificationConfig"
+  | "FontFallbackConfig"
+  | "SongConfig";
+
 export const cms = [
   {
     url: "GameConfig",

@@ -1,11 +1,12 @@
 import PacketServer from "./PacketServer";
-import { cms } from "./CMSFiles";
+import { cms, CMSTitles } from "./CMSFiles";
 import { proto as CMSRequestProto } from "./protos/CMSRequest";
 import { proto as CMSRequestResponseProto } from "./protos/CMSRequestResponse";
 import { proto as ResponseHeaderProto } from "./protos/ResponseHeader";
+import zlib from "zlib";
 
 interface CMSVersion {
-  name: string;
+  name: CMSTitles;
   version: string;
   hash: string;
   url: string;
@@ -43,6 +44,20 @@ export async function getCms(): Promise<CMSVersion[]> {
   const json = response.toJson(ResponseHeaderProto, CMSRequestResponseProto);
 
   return json.body.cms[0].cms[0].cms;
+}
+
+export async function getCMSFile(file: CMSTitles) {
+  const cms = await getCms();
+  const url = cms.find((el) => el.name === file)?.url;
+  if (!url) {
+    throw new Error("Unknown CMS title given.");
+  }
+  const response = await fetch(url, {
+    method: "GET",
+  });
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  return zlib.gunzipSync(buffer);
 }
 
 /*export async function getExtraCms() {
