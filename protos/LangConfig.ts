@@ -6,7 +6,7 @@ export interface LangConfig {
     translations: {
       key: string;
       value: string;
-    };
+    }[];
   }[];
   languages: {
     id: string;
