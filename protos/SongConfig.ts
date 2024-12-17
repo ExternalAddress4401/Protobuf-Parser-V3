@@ -58,7 +58,7 @@ export interface SongConfig {
     }[];
     TrackIntensityGlow: string;
     VFXColor: string;
-    InvertPerfectBarColor: boolean;
+    VFXAlternativeColor: string;
     Audiobanks_id: number;
     BibleId: string;
     idLabel: string;
