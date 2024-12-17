@@ -1,4 +1,121 @@
 import { CMSField } from "../interfaces/CMSField";
+import { Gradient } from "../interfaces/Gradient";
+
+export interface SongConfig {
+  version: string;
+  GameSKUs: {
+    id: number;
+    idLabel: string;
+  }[];
+  Beatmaps: {
+    id: number;
+    availability: number;
+    Song_id: number;
+    idLabel: string;
+    BeatmapVariantReference_id: number;
+  }[];
+  BeatmapVariants: {
+    id: number;
+    idLabel: string;
+    Song_id: number;
+    MaxNumLanes: number;
+    MaxScore: number;
+    Difficulty_id: number;
+    Version: number;
+    isComplete: number;
+    InteractionsReference_id: number;
+    NumStars: number;
+    InteractionsAsset_id: string;
+    botScoreCurve: {};
+    Description: string;
+    BeatmapType: number;
+  }[];
+  Songs: {
+    id: number;
+    BPM: number;
+    weightingTags: {
+      tag_id: number;
+      weight3dp: number;
+    }[];
+    CoverArtAsset_id: string;
+    TimeSignature: number;
+    BaseColor: string;
+    DarkColor: string;
+    ColorGradient: Gradient;
+    GenreTagsId: number;
+    WwiseSwitch: {
+      switchId: number;
+      switchState: number;
+    };
+    CheckpointOutlineColour: string;
+    ColorGradientInGame: Gradient;
+    StreakConfig: {
+      GlowColor: string;
+      PerfectBarColor: string;
+      InvertPerfectBar: boolean;
+      VFXColor: string;
+      WhizzbangColor: number;
+    }[];
+    TrackIntensityGlow: string;
+    VFXColor: string;
+    InvertPerfectBarColor: boolean;
+    Audiobanks_id: number;
+    BibleId: string;
+    idLabel: string;
+    ISRC: string;
+    LegalState: number;
+    LegalAttribution: string;
+    SongTitleLocId: string;
+    SongArtistLocId: string;
+    Rejected: boolean;
+    MusicKitData_id: number;
+    Groups_id: number;
+    removalReason: string;
+    songMetaId: number;
+    sku_id: number;
+    audioAsset_id: string;
+    TrackGlow: number;
+  }[];
+  SongDifficulties: {
+    id: number;
+    difficulty: number;
+    idLabel: string;
+  }[];
+  SongTags: {
+    id: number;
+    idLabel: string;
+    sku_id: number;
+  }[];
+  SongWeightingTags: {
+    id: number;
+    idLabel: string;
+  }[];
+  BanGroups: {
+    id: string;
+    blanketBanned: boolean;
+  }[];
+  SongGroups: {
+    id: number;
+    idLabel: string;
+  }[];
+  SongMetas: {
+    id: number;
+    idLabel: string;
+  }[];
+  SongArtists: {
+    id: string;
+    trivia_id: string[];
+    albumArtSuitableForLoadingScreen: boolean;
+  }[];
+  SongSelectionWeightings: {
+    id: number;
+    idLabel: string;
+    totaliser: number;
+    shuffle: number;
+    easyQueue: number;
+    box: number;
+  }[];
+}
 
 export const proto: Record<number, CMSField> = {
   1: {
@@ -156,11 +273,11 @@ export const proto: Record<number, CMSField> = {
         chunk: "Gradient",
       },
       50: {
-        name: "genreTagsId",
+        name: "GenreTagsId",
         type: "varint",
       },
       53: {
-        name: "wwiseSwitch",
+        name: "WwiseSwitch",
         type: "group",
         fields: {
           1: {
@@ -187,37 +304,37 @@ export const proto: Record<number, CMSField> = {
         type: "group",
         fields: {
           2: {
-            name: "glowColor",
+            name: "GlowColor",
             type: "string",
           },
           3: {
-            name: "perfectBarColor",
+            name: "PerfectBarColor",
             type: "string",
           },
           4: {
-            name: "invertPerfectBarColor",
+            name: "InvertPerfectBarColor",
             type: "boolean",
           },
           5: {
-            name: "vfxColor",
+            name: "VFXColor",
             type: "string",
           },
           10: {
-            name: "whizzbangColor",
+            name: "WhizzbangColor",
             type: "signed-varint",
           },
         },
       },
       62: {
-        name: "trackIntensityGlow",
+        name: "TrackIntensityGlow",
         type: "string",
       },
       63: {
-        name: "vfxColor",
+        name: "VFXColor",
         type: "string",
       },
       64: {
-        name: "vfxAlternativeColor",
+        name: "VFXAlternativeColor",
         type: "string",
       },
       65: {
@@ -225,7 +342,7 @@ export const proto: Record<number, CMSField> = {
         type: "varint",
       },
       66: {
-        name: "bibleId",
+        name: "BibleId",
         type: "string",
       },
       67: {
@@ -233,23 +350,27 @@ export const proto: Record<number, CMSField> = {
         type: "string",
       },
       68: {
-        name: "isrc",
+        name: "ISRC",
         type: "string",
       },
       69: {
-        name: "legalState",
+        name: "LegalState",
         type: "varint",
       },
       72: {
-        name: "legalAttribution",
+        name: "LegalAttribution",
         type: "string",
       },
+      74: {
+        name: "SilentBeats",
+        type: "float",
+      },
       76: {
-        name: "songTitleLocId",
+        name: "SongTitleLocId",
         type: "string",
       },
       77: {
-        name: "songArtistLocId",
+        name: "SongArtistLocId",
         type: "string",
       },
       78: {
@@ -257,7 +378,7 @@ export const proto: Record<number, CMSField> = {
         type: "boolean",
       },
       79: {
-        name: "musicKitDataId",
+        name: "MusicKitData_id",
         type: "varint",
       },
       80: {
@@ -265,11 +386,11 @@ export const proto: Record<number, CMSField> = {
         type: "varint", //repeating
       },
       83: {
-        name: "removalReason",
+        name: "RemovalReason",
         type: "string",
       },
       84: {
-        name: "songMetaId",
+        name: "SongMetaId",
         type: "varint",
       },
       85: {
@@ -348,6 +469,14 @@ export const proto: Record<number, CMSField> = {
         name: "blanketBanned",
         type: "boolean",
       },
+      6: {
+        name: "removalType",
+        type: "varint",
+      },
+      7: {
+        name: "hideCoverArt",
+        type: "boolean",
+      },
     },
   },
   12: {
@@ -388,7 +517,7 @@ export const proto: Record<number, CMSField> = {
       },
       2: {
         name: "trivia_id",
-        type: "string",
+        type: "string-repeat",
       },
       3: {
         name: "albumArtSuitableForLoadingScreen",

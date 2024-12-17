@@ -76,7 +76,7 @@ export class ProtobufReader extends BufferHandler {
           parsed[proto[key].name] = values;
           break;
         case "boolean":
-          parsed[proto[key].name] = this.groupings[key][0].readVarint() === 0;
+          parsed[proto[key].name] = this.groupings[key][0].readVarint() === 1;
           break;
         case "group":
           this.preprocess();

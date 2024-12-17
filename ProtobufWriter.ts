@@ -5,11 +5,7 @@ export class ProtobufWriter extends BufferHandler {
   constructor() {
     super(Buffer.alloc(1000000), "WRITE");
   }
-  build(
-    data: Record<string, any>,
-    proto: Record<number, CMSField>,
-    sub: boolean = false
-  ) {
+  build(data: Record<string, any>, proto: Record<number, CMSField>) {
     const ent = Object.entries(proto);
     let temp: ProtobufWriter;
     for (const key in data) {
@@ -30,7 +26,7 @@ export class ProtobufWriter extends BufferHandler {
           temp = new ProtobufWriter();
           for (const entry of data[key]) {
             const b = new ProtobufWriter();
-            const buf = b.build(entry, prot.fields, true);
+            const buf = b.build(entry, prot.fields);
             temp.writeKey(2, parseInt(protoKey));
             temp.writeVarint(buf.length);
             temp.writeBuffer(buf);

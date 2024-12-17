@@ -1,5 +1,15 @@
 import { CMSField } from "../interfaces/CMSField";
 
+export interface FontFallbackConfig {
+  version: string;
+  fontConfig: {
+    preferredFallbackFontsMacOS: string[];
+    preferredFallbackFontsWindows: string[];
+    preferredFallbackFontsAndroid: string[];
+    preferredFallbackFontsiOS: string[];
+  };
+}
+
 export const proto: Record<number, CMSField> = {
   1000: {
     name: "version",

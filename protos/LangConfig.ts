@@ -1,6 +1,13 @@
 import { CMSField } from "../interfaces/CMSField";
 
-export interface LangConfigProto {
+export interface LangConfig {
+  translations: {
+    id: string;
+    translations: {
+      key: string;
+      value: string;
+    };
+  }[];
   languages: {
     id: string;
     nativeName: string;
@@ -8,7 +15,7 @@ export interface LangConfigProto {
     defaultCulture: string;
     exportToTransifex: boolean;
     transifexId: string;
-  };
+  }[];
   version: string;
   settings: {};
   bakeSettings: {};
@@ -61,7 +68,7 @@ export const proto: Record<number, CMSField> = {
       },
       5: {
         name: "exportToTransifex",
-        type: "varint",
+        type: "boolean",
       },
       6: {
         name: "transifexId",

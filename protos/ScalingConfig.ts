@@ -1,5 +1,28 @@
 import { CMSField } from "../interfaces/CMSField";
 
+export interface ScalingConfig {
+  version: string;
+  levels: {
+    id: string;
+    module: {
+      type: number;
+      slice: any;
+    };
+  }[];
+  groups: {
+    id: string;
+    priority: number;
+    requirements: {};
+    level_id: string;
+  }[];
+  devices: {
+    id: number;
+    idLabel: string;
+    platform: number;
+    level_id: string;
+  };
+}
+
 export const proto: Record<number, CMSField> = {
   1: {
     name: "version",

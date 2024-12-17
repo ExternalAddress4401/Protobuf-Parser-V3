@@ -1,5 +1,28 @@
 import { CMSField } from "../interfaces/CMSField";
 
+export interface AssetsPatchConfig {
+  version: string;
+  assetBundles: {
+    id: string;
+    DependenciesAndroid_id: string;
+    HashAndroid: string;
+    SizeInBytesAndroid: number;
+    CRCAndroid: number;
+    HashIos: string;
+    SizeInBytesIos: number;
+    CRCIos: number;
+    DependenciesIos_id: string;
+  }[];
+  assets: {
+    id: string;
+    name: string;
+    iosBundle: string;
+    androidBundle: string;
+  }[];
+  downloadUrl: string;
+  downloadBucketVersion: string;
+}
+
 export const proto: Record<number, CMSField> = {
   1: {
     name: "version",
