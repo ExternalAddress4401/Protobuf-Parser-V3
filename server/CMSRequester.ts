@@ -4,6 +4,16 @@ import { proto as CMSRequestProto } from "./protos/CMSRequest";
 import { proto as CMSRequestResponseProto } from "./protos/CMSRequestResponse";
 import { proto as ResponseHeaderProto } from "./protos/ResponseHeader";
 import zlib from "zlib";
+import { ProtobufReader } from "../ProtobufReader";
+import {
+  AssetsPatchConfigProto,
+  FontFallbackConfigProto,
+  LangConfigProto,
+  AudioConfig,
+  ScalingConfigProto,
+  SongConfigProto,
+  AudioConfigProto,
+} from "../index";
 
 interface CMSVersion {
   name: CMSTitles;
@@ -12,7 +22,7 @@ interface CMSVersion {
   url: string;
 }
 
-export async function getCms(): Promise<CMSVersion[]> {
+export async function getCMS(): Promise<CMSVersion[]> {
   const server = new PacketServer("socket-gateway.prod.flamingo.apelabs.net");
   await server.authenticate();
 
@@ -46,9 +56,10 @@ export async function getCms(): Promise<CMSVersion[]> {
   return json.body.cms[0].cms[0].cms;
 }
 
-export async function getCMSFile(file: CMSTitles) {
-  const cms = await getCms();
-  const url = cms.find((el) => el.name === file)?.url;
+export async function getCMSFile(title: CMSTitles) {
+  const cms = await getCMS();
+  console.log(cms);
+  const url = cms.find((el) => el.name === title)?.url;
   if (!url) {
     throw new Error("Unknown CMS title given.");
   }
@@ -58,6 +69,30 @@ export async function getCMSFile(file: CMSTitles) {
 
   const buffer = Buffer.from(await response.arrayBuffer());
   return zlib.gunzipSync(buffer);
+}
+
+export async function getParsedCMSFile(title: CMSTitles) {
+  const file = await getCMSFile(title);
+  const reader = new ProtobufReader(file);
+
+  switch (title) {
+    case "GameConfig":
+      return;
+    case "LangConfig":
+      return reader.parse(LangConfigProto);
+    case "AssetsPatchConfig":
+      return reader.parse(AssetsPatchConfigProto);
+    case "AudioConfig":
+      return reader.parse(AudioConfigProto);
+    case "FontFallbackConfig":
+      return reader.parse(FontFallbackConfigProto);
+    case "NotificationConfig":
+      return;
+    case "ScalingConfig":
+      return reader.parse(ScalingConfigProto);
+    case "SongConfig":
+      return reader.parse(SongConfigProto);
+  }
 }
 
 /*export async function getExtraCms() {
