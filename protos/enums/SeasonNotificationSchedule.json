@@ -1,0 +1,32 @@
+{
+  "1": {
+    "name": "SeasonNotifications",
+    "type": "group",
+    "fields": {
+      "1": {
+        "name": "UseStartOrEndTime",
+        "type": "varint"
+      },
+      "2": {
+        "name": "TimeOffsetMsecs",
+        "type": "varint"
+      },
+      "3": {
+        "name": "NotificationTimeOffsetMsecs",
+        "type": "varint"
+      },
+      "4": {
+        "name": "DontQueueIfPastEndTime",
+        "type": "booleam"
+      },
+      "6": {
+        "name": "NotificationTimeStaggerMsecs",
+        "type": "varint"
+      },
+      "7": {
+        "name": "NotificationToTrigger_id",
+        "type": "string"
+      }
+    }
+  }
+}

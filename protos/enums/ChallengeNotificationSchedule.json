@@ -1,0 +1,46 @@
+{
+  "6": {
+    "name": "timeBeforeExpireWarningNotificationsMsecs",
+    "type": "varint"
+  },
+  "7": {
+    "name": "numQuestsForHalfFullWarning",
+    "type": "varint"
+  },
+  "8": {
+    "name": "numQuestsForFullWarning",
+    "type": "varint"
+  },
+  "11": {
+    "name": "NumNewChallengeAvailableNotificationsToGive",
+    "type": "varint"
+  },
+  "12": {
+    "name": "CampaignGachaBoxReadyToClaimNotification_id",
+    "type": "string"
+  },
+  "13": {
+    "name": "CampaignGachaBoxReadyToClaimReminderNotification_id",
+    "type": "string"
+  },
+  "16": {
+    "name": "DelayBeforeCampaignGachaBoxReadyToClaimReminderNotificationMsecs",
+    "type": "varint"
+  },
+  "17": {
+    "name": "VenueEndedNotification_id",
+    "type": "string"
+  },
+  "18": {
+    "name": "VenueCooldownEndedNotification_id",
+    "type": "string"
+  },
+  "19": {
+    "name": "FinalCampaignGachaBoxReadyToClaimNotification_id",
+    "type": "string"
+  },
+  "20": {
+    "name": "FinalCampaignGachaBoxReadyToClaimReminderNotification_id",
+    "type": "string"
+  }
+}

@@ -13,6 +13,13 @@ import {
   ScalingConfigProto,
   SongConfigProto,
   AudioConfigProto,
+  LangConfig,
+  AssetsPatchConfig,
+  FontFallbackConfig,
+  NotificationConfigProto,
+  NotificationConfig,
+  ScalingConfig,
+  SongConfig,
 } from "../index";
 
 interface CMSVersion {
@@ -58,7 +65,6 @@ export async function getCMS(): Promise<CMSVersion[]> {
 
 export async function getCMSFile(title: CMSTitles) {
   const cms = await getCMS();
-  console.log(cms);
   const url = cms.find((el) => el.name === title)?.url;
   if (!url) {
     throw new Error("Unknown CMS title given.");
@@ -79,19 +85,19 @@ export async function getParsedCMSFile(title: CMSTitles) {
     case "GameConfig":
       return;
     case "LangConfig":
-      return reader.parse(LangConfigProto);
+      return reader.parse(LangConfigProto) as LangConfig;
     case "AssetsPatchConfig":
-      return reader.parse(AssetsPatchConfigProto);
+      return reader.parse(AssetsPatchConfigProto) as AssetsPatchConfig;
     case "AudioConfig":
-      return reader.parse(AudioConfigProto);
+      return reader.parse(AudioConfigProto) as AudioConfig;
     case "FontFallbackConfig":
-      return reader.parse(FontFallbackConfigProto);
+      return reader.parse(FontFallbackConfigProto) as FontFallbackConfig;
     case "NotificationConfig":
-      return;
+      return reader.parse(NotificationConfigProto) as NotificationConfig;
     case "ScalingConfig":
-      return reader.parse(ScalingConfigProto);
+      return reader.parse(ScalingConfigProto) as ScalingConfig;
     case "SongConfig":
-      return reader.parse(SongConfigProto);
+      return reader.parse(SongConfigProto) as SongConfig;
   }
 }
 

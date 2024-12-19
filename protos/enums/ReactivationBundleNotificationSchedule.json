@@ -1,0 +1,24 @@
+{
+  "1": {
+    "name": "notifications",
+    "type": "group",
+    "fields": {
+      "1": {
+        "name": "UseStartOrEndTime",
+        "type": "varint"
+      },
+      "3": {
+        "name": "NotificationTimeOffsetMsecs",
+        "type": "varint"
+      },
+      "6": {
+        "name": "NotificationTimeStaggerMsecs",
+        "type": "varint"
+      },
+      "7": {
+        "name": "NotificationToTrigger_id",
+        "type": "string"
+      }
+    }
+  }
+}

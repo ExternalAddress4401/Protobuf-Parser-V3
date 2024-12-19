@@ -1,0 +1,32 @@
+{
+  "1": {
+    "name": "FireAfterMsecs",
+    "type": "varint"
+  },
+  "2": {
+    "name": "requirement",
+    "type": "group",
+    "fields": {
+      "3": {
+        "name": "sharedRequirement_id",
+        "type": "string"
+      }
+    }
+  },
+  "3": {
+    "name": "id",
+    "type": "varint"
+  },
+  "4": {
+    "name": "idLabel",
+    "type": "string"
+  },
+  "6": {
+    "name": "notificationOptions_id",
+    "type": "string-repeat"
+  },
+  "8": {
+    "name": "enabled",
+    "type": "boolean"
+  }
+}

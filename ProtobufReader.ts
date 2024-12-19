@@ -116,19 +116,23 @@ export class ProtobufReader extends BufferHandler {
           parsed[proto[key].name] = this.groupings[key][0].parse(chunk.fields);
           break;
         case "enum":
-          const e = JSON.parse(
-            fs
-              .readFileSync(
-                path.join(
-                  __dirname,
-                  "protos/enums",
-                  `${proto[key].enums[parsed.type]}.json`
+          try {
+            const e = JSON.parse(
+              fs
+                .readFileSync(
+                  path.join(
+                    __dirname,
+                    "protos/enums",
+                    `${proto[key].enums[parsed.type]}.json`
+                  )
                 )
-              )
-              .toString()
-          );
-          this.groupings[key][0].preprocess();
-          parsed[proto[key].name] = this.groupings[key][0].parse(e);
+                .toString()
+            );
+            this.groupings[key][0].preprocess();
+            parsed[proto[key].name] = this.groupings[key][0].parse(e);
+          } catch (e) {
+            parsed[proto[key].name] = this.groupings[key][0].getBuffer();
+          }
           break;
       }
     }

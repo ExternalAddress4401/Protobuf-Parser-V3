@@ -1,0 +1,126 @@
+{
+  "1": {
+    "name": "ShuffleEventNotifications",
+    "type": "packed",
+    "fields": {
+      "1": {
+        "name": "UseStartOrEndTime",
+        "type": "varint"
+      },
+      "5": {
+        "name": "UseLocalTimeOptions",
+        "type": "group",
+        "fields": {
+          "1": {
+            "name": "LocalTimeMsecs",
+            "type": "varint"
+          },
+          "2": {
+            "name": "PlusDaysFromRegionTime",
+            "type": "varint"
+          }
+        }
+      },
+      "6": {
+        "name": "NotificationTimeStaggerMsecs",
+        "type": "varint"
+      },
+      "7": {
+        "name": "NotificationToTrigger_id",
+        "type": "string"
+      }
+    }
+  },
+  "2": {
+    "name": "ShuffleEventNotificationsEnabled",
+    "type": "boolean"
+  },
+  "3": {
+    "name": "LeaderboardEventNotificationsEnabled",
+    "type": "boolean"
+  },
+  "4": {
+    "name": "LeaderboardEvt_InitialSegmentNotifications",
+    "type": "packed",
+    "fields": {
+      "1": {
+        "name": "UseStartOrEndTime",
+        "type": "varint"
+      },
+      "6": {
+        "name": "NotificationTimeStaggerMsecs",
+        "type": "varint"
+      },
+      "7": {
+        "name": "NotificationToTrigger_id",
+        "type": "string"
+      }
+    }
+  },
+  "5": {
+    "name": "LeaderboardEvt_LaterSegmentNotifications",
+    "type": "packed",
+    "fields": {
+      "1": {
+        "name": "UseStartOrEndTime",
+        "type": "varint"
+      },
+      "6": {
+        "name": "NotificationTimeStaggerMsecs",
+        "type": "varint"
+      },
+      "7": {
+        "name": "NotificationToTrigger_id",
+        "type": "string"
+      }
+    }
+  },
+  "6": {
+    "name": "LeaderboardEvt_EndingCoolOffNotifications",
+    "type": "packed",
+    "fields": {
+      "1": {
+        "name": "UseStartOrEndTime",
+        "type": "varint"
+      },
+      "3": {
+        "name": "NotificationTimeOffsetMsecs",
+        "type": "varint"
+      },
+      "6": {
+        "name": "NotificationTimeStaggerMsecs",
+        "type": "varint"
+      },
+      "7": {
+        "name": "NotificationToTrigger_id",
+        "type": "string"
+      }
+    }
+  },
+  "7": {
+    "name": "TotaliserEventNotificationsEnabled",
+    "type": "boolean"
+  },
+  "8": {
+    "name": "TotaliserEventNotifications",
+    "type": "packed",
+    "fields": {
+      "1": {
+        "name": "UseStartOrEndTime",
+        "type": "varint"
+      },
+      "3": {
+        "name": "NotificationTimeOffsetMsecs",
+        "type": "varint"
+      },
+      "6": {
+        "name": "NotificationTimeStaggerMsecs",
+        "type": "varint"
+      },
+      "7": {
+        "name": "NotificationToTrigger_id",
+        "type": "string"
+      }
+    }
+  }
+}
