@@ -17,9 +17,9 @@ import {
   ScalingConfig,
 } from "./protos/ScalingConfig";
 import { proto as SongConfigProto, SongConfig } from "./protos/SongConfig";
-import { getCMS, getCMSFile, getParsedCMSFile } from "./server/CMSRequester";
 import { ProtobufReader } from "./ProtobufReader";
 import { ProtobufWriter } from "./ProtobufWriter";
+import PacketServer from "./server/PacketServer";
 
 export {
   AssetsPatchConfigProto,
@@ -38,7 +38,5 @@ export {
   NotificationConfig,
   ProtobufReader,
   ProtobufWriter,
-  getCMS,
-  getCMSFile,
-  getParsedCMSFile,
+  PacketServer,
 };

@@ -3,12 +3,43 @@ import tls from "tls";
 import { randomUUID } from "crypto";
 import Packet from "./Packet";
 import { proto as LoginPacketProto } from "./protos/LoginPacket";
-import { proto as ResponseHeaderProto } from "./protos/ResponseHeader";
 import { proto as LoginPacketResponseProto } from "./protos/LoginPacketResponse";
 import { proto as HeaderProto } from "./protos/Header";
+import { proto as CMSRequestProto } from "./protos/CMSRequest";
+import { proto as CMSRequestResponseProto } from "./protos/CMSRequestResponse";
+import { proto as ResponseHeaderProto } from "./protos/ResponseHeader";
+import { cms, CMSTitles } from "./CMSFiles";
+import zlib from "zlib";
+import { ProtobufReader } from "../ProtobufReader";
+import {
+  AssetsPatchConfigProto,
+  FontFallbackConfigProto,
+  LangConfigProto,
+  AudioConfig,
+  ScalingConfigProto,
+  SongConfigProto,
+  AudioConfigProto,
+  LangConfig,
+  AssetsPatchConfig,
+  FontFallbackConfig,
+  NotificationConfigProto,
+  NotificationConfig,
+  ScalingConfig,
+  SongConfig,
+} from "../index";
 
-type EndPoints = "socket-gateway.prod.flamingo.apelabs.net";
+type EndPoints =
+  | "socket-gateway.prod.flamingo.apelabs.net"
+  | "socket-gateway.prod.robin.apelabs.net";
+
 export type Service = "userservice" | "cmsservice" | "gameservice";
+
+interface CMSVersion {
+  name: CMSTitles;
+  version: string;
+  hash: string;
+  url: string;
+}
 
 interface Header {
   version: string;
@@ -18,7 +49,7 @@ interface Header {
   base64?: string;
 }
 
-class PacketServer {
+export class PacketServer {
   id: string = "";
   base64: string = "";
   isAuthenticated: boolean = false;
@@ -33,7 +64,7 @@ class PacketServer {
     return `rpc-${index}-${getRandom(100000, 999999)}`;
   }
   async authenticate() {
-    this.socket = tls.connect(443, "socket-gateway.prod.flamingo.apelabs.net");
+    this.socket = tls.connect(443, this.endPoint);
 
     const body = {
       id: 1,
@@ -114,6 +145,75 @@ class PacketServer {
       self.socket?.on("data", get);
       self.socket?.write(p);
     });
+  }
+  async getCMS(): Promise<CMSVersion[]> {
+    await this.authenticate();
+
+    const cmsRequest = {
+      id: 1,
+      version: "999.9.9.99999",
+      timestamp: Date.now(),
+      empty: "",
+      cms: [
+        {
+          id: 1,
+          empty: "",
+          unknown: 1,
+          thing: [
+            {
+              cms,
+            },
+          ],
+        },
+      ],
+    };
+
+    const response = await this.writePacket(
+      "cmsservice",
+      2,
+      cmsRequest,
+      CMSRequestProto
+    );
+    const json = response.toJson(ResponseHeaderProto, CMSRequestResponseProto);
+
+    return json.body.cms[0].cms[0].cms;
+  }
+  async getCMSFile(title: CMSTitles) {
+    const cms = await this.getCMS();
+    const url = cms.find((el) => el.name === title)?.url;
+    if (!url) {
+      throw new Error("Unknown CMS title given.");
+    }
+    const response = await fetch(url, {
+      method: "GET",
+    });
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+    return zlib.gunzipSync(buffer);
+  }
+
+  async getParsedCMSFile(title: CMSTitles) {
+    const file = await this.getCMSFile(title);
+    const reader = new ProtobufReader(file);
+
+    switch (title) {
+      case "GameConfig":
+        return;
+      case "LangConfig":
+        return reader.parse(LangConfigProto) as LangConfig;
+      case "AssetsPatchConfig":
+        return reader.parse(AssetsPatchConfigProto) as AssetsPatchConfig;
+      case "AudioConfig":
+        return reader.parse(AudioConfigProto) as AudioConfig;
+      case "FontFallbackConfig":
+        return reader.parse(FontFallbackConfigProto) as FontFallbackConfig;
+      case "NotificationConfig":
+        return reader.parse(NotificationConfigProto) as NotificationConfig;
+      case "ScalingConfig":
+        return reader.parse(ScalingConfigProto) as ScalingConfig;
+      case "SongConfig":
+        return reader.parse(SongConfigProto) as SongConfig;
+    }
   }
 }
 
