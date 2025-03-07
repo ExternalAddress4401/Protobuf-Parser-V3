@@ -49,12 +49,17 @@ interface Header {
   base64?: string;
 }
 
+interface Options {
+  stringifyBuffer: boolean;
+}
+
 export class PacketServer {
   id: string = "";
   base64: string = "";
   isAuthenticated: boolean = false;
   socket: tls.TLSSocket | null = null;
   endPoint: EndPoints;
+  stringifyBuffers: boolean = false;
 
   constructor(endPoint: EndPoints) {
     this.endPoint = endPoint;
@@ -62,6 +67,9 @@ export class PacketServer {
 
   getRandomRpc(index: number) {
     return `rpc-${index}-${getRandom(100000, 999999)}`;
+  }
+  options(options: Options) {
+    this.stringifyBuffers = options.stringifyBuffer ?? false;
   }
   async authenticate() {
     this.socket = tls.connect(443, this.endPoint);
@@ -196,6 +204,8 @@ export class PacketServer {
     const file = await this.getCMSFile(title);
     const reader = new ProtobufReader(file);
 
+    let parsed;
+
     switch (title) {
       case "GameConfig":
         return;
@@ -214,6 +224,20 @@ export class PacketServer {
       case "SongConfig":
         return reader.parse(SongConfigProto) as SongConfig;
     }
+  }
+  safeBuffer(data: Record<any, any>) {
+    return data.map((item) => {
+      const cleanItem = { ...item };
+
+      // Remove or condvert Buffer fields
+      Object.keys(cleanItem).forEach((key) => {
+        if (cleanItem[key] instanceof Buffer) {
+          cleanItem[key] = JSON.stringify(cleanItem[key]);
+        }
+      });
+
+      return cleanItem;
+    });
   }
 }
 
